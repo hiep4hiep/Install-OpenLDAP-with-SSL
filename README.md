@@ -120,3 +120,51 @@ modifyTimestamp: 20230421021939Z
 memberOf: cn=standard,ou=groups,dc=example,dc=com
 modifiersName: cn=admin,dc=example,dc=com
 ```
+
+### Generate certificates for OpenLDAP SSL
+```
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout openldap.key -out openldap.crt
+```
+Copy the key and crt files to /etc/ldap/sasl2
+```
+cp openldap.* /etc/ldap/sasl2
+```
+Change owner to openldap:openldap
+```
+chown openldap:openldap /etc/ldap/sasl2/openldap.*
+```
+
+### Add LDAP SSL Ldif file
+```
+vi ldapssl.ldif
+
+dn: cn=config
+changetype: modify
+add: olcTLSCACertificateFile
+olcTLSCACertificateFile: /etc/ldap/sasl2/openldap.crt
+-
+replace: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/ldap/sasl2/openldap.crt
+-
+replace: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/ldap/sasl2/openldap.key
+```
+```
+ldapmodify -Y EXTERNAL -H ldapi:/// -f ldapssl.ldif
+```
+
+### Enable LDAPS service
+```
+vi /etc/default/slapd
+```
+Add ldaps:/// to this service line
+```
+SLAPD_SERVICES="ldap:/// ldaps:/// ldapi:///"
+```
+Restart slapd service
+```
+systemctl restart slapd
+```
+
+# And it's done!
+
