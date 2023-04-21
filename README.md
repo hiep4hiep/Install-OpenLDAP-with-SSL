@@ -71,8 +71,8 @@ dn: uid=user01,ou=people,dc=example,dc=com
 objectClass: inetOrgPerson
 objectClass: posixAccount
 objectClass: shadowAccount
-cn: vpnuser01
-sn: vpnuser01
+cn: user01
+sn: user01
 userPassword: {SSHA}QI5YFIBdOMzv+UfWy5fE8JsWE94ZmpyO
 loginShell: /bin/bash
 gidNumber: 2000
@@ -89,7 +89,7 @@ ldapadd -x -D cn=admin,dc=example,dc=com -W -f ldapusers.ldif
 dn: cn=standard,ou=groups,dc=asgardian,dc=network
 objectClass: groupOfNames
 cn: standard
-member: uid=vpnuser01,ou=people,dc=example,dc=com
+member: uid=user01,ou=people,dc=example,dc=com
 ```
 - Add the group
 ```
@@ -111,7 +111,7 @@ gidNumber: 2000
 uidNumber: 2000
 homeDirectory: /home/user01
 structuralObjectClass: inetOrgPerson
-uid: vpnuser01
+uid: user01
 entryUUID: b6cc0832-7436-103d-9964-3dbc870410a6
 creatorsName: cn=admin,dc=asgardian,dc=network
 createTimestamp: 20230421021939Z
